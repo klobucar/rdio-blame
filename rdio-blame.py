@@ -12,13 +12,19 @@ RDIO_CONSUMER_SECRET = ''
 if len(sys.argv) > 1:
   username = sys.argv[1]
 else:
-  username = getpass.getuser()
+	username = getpass.getuser()
 
 consumer = oauth.Consumer(RDIO_CONSUMER_KEY, RDIO_CONSUMER_SECRET)
 client = oauth.Client(consumer)
 
+user_response = client.request('http://api.rdio.com/1/', 'POST',
+  urllib.urlencode({'method': 'findUser', 'vanityName': username }))
+
+currentUser = json.loads(user_response[1])['result']
+
 response = client.request('http://api.rdio.com/1/', 'POST',
-  urllib.urlencode({'method': 'getHeavyRotation', 'user': user, 'friends': 1,  'extras': '-trackKeys', 'limit': 12}))
+  urllib.urlencode({'method': 'getHeavyRotation', 'user': currentUser['key'], 'friends': 1,  'extras': '-trackKeys', 'limit': 12}))
+
 hr = json.loads(response[1])['result']
 
 for album in hr:
