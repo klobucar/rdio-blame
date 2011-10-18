@@ -12,7 +12,7 @@ RDIO_CONSUMER_SECRET = ''
 if len(sys.argv) > 1:
   username = sys.argv[1]
 else:
-	username = getpass.getuser()
+  username = getpass.getuser()
 
 consumer = oauth.Consumer(RDIO_CONSUMER_KEY, RDIO_CONSUMER_SECRET)
 client = oauth.Client(consumer)
