@@ -23,3 +23,4 @@ hr = json.loads(response[1])['result']
 
 for album in hr:
   print "%s - %s" %( album['artist'], album['name'] )
+  print "\t Score: %s" % (album['hits'])
