@@ -20,9 +20,14 @@ client = oauth.Client(consumer)
 def name(u):
   return u['firstName'] + " " + u['lastName']
 
+def network_hr(user):
+  response = client.request('http://api.rdio.com/1/', 'POST',
+    urllib.urlencode({'method': 'getHeavyRotation', 'user': user, 'friends': 1, 'extras': '-trackKeys', 'limit': 12}))
+  return json.loads(response[1])['result']
+
 def hr(user):
   response = client.request('http://api.rdio.com/1/', 'POST',
-    urllib.urlencode({'method': 'getHeavyRotation', 'user': user, 'friends': 1,  'extras': '-trackKeys', 'limit': 12}))
+    urllib.urlencode({'method': 'getHeavyRotation', 'user': user, 'extras': '-trackKeys', 'limit': 20}))
   return json.loads(response[1])['result']
 
 def userFromVanity(name):
@@ -33,7 +38,7 @@ def userFromVanity(name):
 currentUser = userFromVanity(username)
 
 follows_response = client.request('http://api.rdio.com/1/', 'POST',
-  urllib.urlencode({'method': 'userFollowing', 'user': currentUser['key']}))
+  urllib.urlencode({'method': 'userFollowing', 'user': currentUser['key'], 'count': 100}))
 
 follows = json.loads(follows_response[1])['result']
 
@@ -54,8 +59,8 @@ for friend in follows:
 
 print ""
 
-for album in hr(currentUser['key']):
-  print " %s - %s" %( album['artist'], album['name'] )
+for album in network_hr(currentUser['key']):
+  print " %s - %s [%s]" %( album['artist'], album['name'], album['hits'])
   for friendKey in albums[album['key']]:
     print "   "+name(friends[friendKey])
   print ""
