@@ -1,5 +1,7 @@
 ### usage:
-`./rdio-blame.py <user_id || user_key>`
+`./rdio-blame.py [username]`
+
+If username is ommited, current user's username will be used.
 
 This is not currently very feature rich, but will show you the top 4 offenders per album in a users heavy rotation.
 
